@@ -1,0 +1,38 @@
+# Pick And Place List
+# Company=
+# Author=
+# eMail=
+#
+# Project=ac-infinity-esphome-rev3
+# Date=17:35:27
+# CreatedBy=Fritzing 1.0.4.2024-10-07.CD-2051-0-a8c6ef7c
+#
+#
+# Coordinates in mils, always center of component
+# Origin 0/0=Lower left corner of PCB
+# Rotation in degree (0-360, math. pos.)
+#
+RefDes,Description,Package,X,Y,Rotation,Side,Mount
+Description: resistance;capacitance;inductance;voltage;current;power;mpn;mn;
+JP2,";;;;;;;;","screwterminal-3.5mm-4_lock",2573.87,654.722,-90,Top,SMT
+R4,"10k;;;;;0.25W;;;","THT",1177.81,868.414,90,Top,THT
+Q1,";;;;;;;;","TO92 [THT]",570.306,764.914,0,Top,THT
+R3,"4.7k;;;;;0.25W;;;","THT",1277.81,668.414,90,Top,THT
+C1,";0.1µF;;35V;;;;;","100 mil [THT, tantalum]",927.806,368.414,0,Top,THT
+D1,";;;;;;;;","diode-1n4148",1727.81,968.414,180,Top,SMT
+C2,";0.1µF;;35V;;;;;","100 mil [THT, tantalum]",377.806,118.414,90,Top,THT
+C3,";0.47µF;;35V;;;;;","200 mil [THT, tantalum]",877.806,768.414,0,Top,THT
+R7,"1k;;;;;0.25W;;;","THT",377.806,805.914,-90,Top,THT
+R8,"1k;;;;;0.25W;;;","THT",1715.31,568.414,0,Top,THT
+Q4,";;;;;;;;","TO92 [THT]",1770.31,364.914,0,Top,THT
+R9,"1k;;;;;0.25W;;;","THT",1477.81,568.414,-90,Top,THT
+Q2,";;;;;;;;","TO92 [THT]",670.306,464.914,0,Top,THT
+U2,";;;5V;;;;;","TO220 [THT]",677.806,108.414,180,Top,THT
+R1,"100k;;;;;0.25W;;;","THT",977.806,568.414,0,Top,THT
+Relay,";;;;;;;;","DIP (Dual Inline) [THT]",2127.81,618.414,0,Top,THT
+Q3,";;;;;;;;","TO92 [THT]",1770.31,764.914,0,Top,THT
+U1,";;;;;;;;","",1366.82,1677.21,0,Top,MANUAL
+JP1,";;;;;;;;","screwterminal-3.5mm-4_lock",173.875,654.722,90,Top,SMT
+R6,"100k;;;;;0.25W;;;","THT",777.806,968.414,0,Top,THT
+R2,"10k;;;;;0.25W;;;","THT",377.806,468.414,-90,Top,THT
+R10,"1k;;;;;0.25W;;;","THT",1277.81,268.414,180,Top,THT

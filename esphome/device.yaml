@@ -1,0 +1,286 @@
+# These are thing you may want to change for your own setup...
+substitutions:
+  name: "ac-infinity-fan-1"
+  friendly_name: "ac-infinity-fan-1"
+  ap_ssid: "ha-ac-inifnity-fan-1"
+  ap_password: "OnIEopLWaBmr"
+  ha_api_encryption_key: !secret ha_api_encryption
+  esphome_ota_password: !secret esphome_ota_password
+  wifi_connect_ssid: !secret wifi_iot_ssid
+  wifi_connect_password: !secret wifi_iot_password
+  boost_minutes: "30"
+  #boost_button_mac_address: "22:00:00:18:c5:fd" # white iFind tag
+  boost_button_mac_address: "5b:c0:10:d3:89:ad" # Purple iTag (1)
+  #boost_button_mac_address: "5b:c8:a9:73:ea:6b" # Black iTag (2)
+  #boost_button_mac_address: "5b:fa:46:9e:21:ab" # Pink iTag (3)
+  #boost_button_mac_address: "5b:38:f4:c0:ac:f6" # White iTag (4)
+
+# Below here is hopefully all 'code' you don't need to touch :-)
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret ha_api_encryption
+
+ota:
+  - platform: esphome
+    password: !secret esphome_ota_password
+
+wifi:
+  ssid: "${wifi_connect_ssid}"
+  password: "${wifi_connect_password}"
+  fast_connect: True
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${ap_ssid}"
+    password: "${ap_password}"
+
+captive_portal:
+
+# Globals are used to remember the current state when switching into boost mode
+# so that the state can be restored after boost mode comes to an end.
+globals:
+  - id: previous_fan_speed
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: previous_takeover_state
+    type: bool
+    restore_value: no
+    initial_value: "false"
+  - id: remaining_minutes
+    type: int
+    restore_value: no
+    initial_value: '0'
+    
+# This outputs PWM for the fan to consume. AC Infinity seems to use about
+# 5KHz frequency, but it doesn't mind the more-comptible-with-ESP32 4884Hz
+output:
+  - platform: ledc
+    pin: GPIO26
+    id: fan_speed_requested
+    inverted: True
+    frequency: 4882
+
+# Since AC Infinity controllers use a number from 0-10 to denote the speed of
+# the fan, so do we. We convert the number into a PWM fraction which trial and
+# error seems to get the fan to run about the same speed as the controller would
+# make it do for the same speed number. The secret is, there are speeds beyond
+# speed 10 (although we don't use them).
+number:
+  platform: template
+  id: override_speed
+  name: "Override Fan Speed"
+  min_value: 0
+  max_value: 10
+  optimistic: True
+  step: 1
+  icon: "mdi:fan"
+  set_action:
+    lambda: |-
+      int new_value = x;
+      // These floats were found by trying different values until the tach pulses/minute were
+      // about the same as when the fan's own controller was used
+      float outputs[] = {0.0, 0.16, 0.23, 0.29, 0.352, 0.425, 0.481, 0.541, 0.621, 0.681, 0.79};
+      id(fan_speed_requested).set_level(outputs[new_value]);
+
+sensor:
+  # The tach signal is a frequency based signal, so we can count pulses to work out
+  # the speed of the fan.
+  #
+  # Measured speeds:
+  # (experince shows it takes maybe 1-2 minutes for the fan to settle on a speed)
+  # number = speed, threshold
+  # 0 = 0, 590
+  # 1 = 1180, 1507
+  # 2 = 1835, 2001
+  # 3 = 2495, 2871
+  # 4 = 3248, 3555
+  # 5 = 3863, 4181
+  # 6 = 4499, 4810
+  # 7 = 5122, 5461
+  # 8 = 5800, 6100
+  # 9 = 6400, 6872
+  # 10 = 7344
+  - platform: pulse_counter
+    pin:
+      number: GPIO33
+      mode:
+        input: true
+        # pullup or pulldown: True
+        #pulldown: True
+    name: "Actual Fan Speed"
+    update_interval: 5s
+    unit_of_measurement: " "
+    icon: "mdi:speedometer"
+    filters:
+      lambda: |-
+        int thresholds[] = {590, 1507, 2001, 2871, 3555, 4181, 4810, 5461, 6100, 6872};
+        for(int i = 0; i < std::size(thresholds); i++) {
+          if (x < thresholds[i]) {
+            // Uncomment this to get some idea where in the range each reading is
+            // if(i < std::size(thresholds) - 1) {
+            //   float diff = thresholds[i] - thresholds[i+1];
+            //   float point = x - thresholds[i];
+            //   return i + (point/diff);
+            // }
+            return i;
+          }
+        }
+        return 10;
+
+  # The controller's PWM signal is a constant frequency, so we can't
+  # count pulses on it. Measuring the pulse width is horribly inaccurate
+  # so instead we use a resistor and capacitor to get a ripply voltage
+  # we can read with an ADC. We have to smooth out readings though to
+  # avoid the ripple (or else use bigger capacitors in the circuit)
+  #
+  # Measured voltages for speeds 0-10 on fan 3, board 1
+  #         - 3.16 -> 0 3.16
+  #         - 2.45 -> 1 2.33
+  #         - 2.21 -> 2 2.08
+  #         - 2.02 -> 3 1.89
+  #         - 1.88 -> 4 1.71
+  #         - 1.66 -> 5 1.58
+  #         - 1.53 -> 6 1.47
+  #         - 1.43 -> 7 1.35
+  #         - 1.29 -> 8 1.25
+  #         - 1.19 -> 9 1.19
+  #         - 1.10 -> 10 1.08
+
+  # thresholds then are:
+  # 2.745, 2.205, 1.985, 1.8, 1.645, 1.525, 1.41, 1.3, 1.22, 1.135
+
+  - platform: adc
+    pin: GPIO34
+    name: "Controller Speed"
+    update_interval: 1s
+    attenuation: 12db
+    id: controller_pwm
+    unit_of_measurement: " "
+    device_class: speed
+    icon: "mdi:speedometer"
+    filters:
+      - sliding_window_moving_average:
+          window_size: 5
+          send_every: 1
+      - lambda: |-
+          float thresholds[] = {2.745, 2.205, 1.985, 1.8, 1.645, 1.525, 1.41, 1.3, 1.22, 1.135};
+          for(int i = 0; i < std::size(thresholds); i++) {
+            if (x > thresholds[i]) {
+              // if(i < std::size(thresholds) - 1) {
+              //   float diff = thresholds[i] - thresholds[i+1];
+              //   float point = x - thresholds[i];
+              //   return i + (1 - (point/diff));
+              // }
+              return i;
+            }
+          }
+          return 10;
+
+switch:
+  # The 'takeover' switch is used to disconnect the controller and connect
+  # the ESP32 to the fan.  
+  - platform: gpio
+    id: takeover
+    pin: GPIO27
+    name: "Controller Takeover"
+    restore_mode: ALWAYS_OFF
+
+  # The boost mode switch is used to start a 'waiter' script which runs in the background
+  # and counts up to 30 minutes. When it gets there, it restores the settings to the way
+  # they were when the switch was turned on.
+  - platform: template
+    id: boost_mode
+    name: "Boost Mode"
+    restore_mode: ALWAYS_OFF
+    lambda: |-
+      // the switch state should follow the waiter script
+      if (id(waiter).is_running() and id(remaining_minutes) > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action:
+      # Re-activiating boost mode gives you another 30 minutes
+      - globals.set:
+          id: remaining_minutes
+          value: "${boost_minutes}"
+      - if:
+          # If boost isn't already on, save the current state and run the waiter
+          condition:
+            switch.is_off: boost_mode
+          then:
+            - lambda: |-
+                id(previous_fan_speed) = id(override_speed).state;
+                id(previous_takeover_state) = id(takeover).state;
+            - script.execute: waiter
+      - number.to_max: override_speed
+      - switch.turn_on: takeover
+
+    turn_off_action:
+      # We can't actually stop the waiter, but we can tell it to do no more waiting
+      - globals.set:
+          id: remaining_minutes
+          value: '0'
+      - if:
+          # Only restore state if boost is on. A double-off won't re-reset the state.
+          condition:
+            switch.is_on: boost_mode
+          then:
+            - lambda: |-
+                // Only turn off the override if it was off when we started
+                if(!id(previous_takeover_state)) {
+                  id(takeover).turn_off();
+                }
+                // Here we check to see if the override's been changed since we set it. If it has, we don't
+                // mess with it (so we don't undo a user's manual change since we starting waiting)
+                if(id(override_speed).state == 10) {
+                  auto call = id(override_speed).make_call();
+                  call.set_value(id(previous_fan_speed));
+                  call.perform();
+                }
+
+# This tracker waits to hear a broadcast beacon from a known mac address
+# When it hears one, it turns on boost mode.
+esp32_ble_tracker:
+  on_ble_advertise:
+    - mac_address:
+        - "${boost_button_mac_address}"
+      then:
+        - switch.turn_on: boost_mode
+
+# The 'waiter' script is started when Boost Mode is turned on. It runs in the
+# background and wakes up once per minute. If Boost Mode has been switched off,
+# the waiter keeps running until it next wakes up, and then stops. Either way,
+# when it comes to the end of its wait time, it tells the boost_mode switch to turn off.
+# Uses a global variable to keep track of how many minutes to wait.
+script:
+  - id: waiter
+    then:
+      - while:
+          condition:
+            lambda: |-
+              if(id(remaining_minutes) > 0) {
+                return true;
+              }
+              return false;
+          then:
+            - lambda: |-
+                ESP_LOGD("waiter", "Waiting for %d minutes", id(remaining_minutes));
+            - delay: 60s
+            - lambda: |-
+                id(remaining_minutes) -= 1;
+      - switch.turn_off: boost_mode
