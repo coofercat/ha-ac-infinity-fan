@@ -1,5 +1,7 @@
 # HA-AC-Infinity Boost Button
 
+[<img src="11-completed-button.jpg" width="300" height="auto" align="right">](11-completed-button.jpg)
+
 The Boost Button is a way to request the fan comes on (at full speed)
 for a period of time (currently programmed at 30 minutes). It's a
 physical device with a big button on the top which can be put somewhere
