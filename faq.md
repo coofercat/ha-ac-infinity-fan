@@ -51,6 +51,10 @@ I've heard this too. I'm no expert, but my take on it is that if mains does appe
 
 Yes you can. For most updates you can use ESPHome's wireless Over The Air (OTA) feature. If you need to directly connect with a USB cable you can do this, but disconnect the board from the AC Infinity while you do so. You will need to remove the board from the box to get access to the ESP32's USB socket.
 
+## My fan says it's running at some speed, but Home Assistant says it's a different speed
+
+You may need to calibrate your electronics with the fan and controller you have. See [ESPHome/readme](esphome/readme.md) for more details.
+
 ## How is this project licensed? Do I need to pay for it or anything else?
 
 The project is Creative Commons licensed, so you can pretty much do what you like with it, so long as you credit the original author. You don't need to pay to use it.
