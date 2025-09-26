@@ -16,7 +16,7 @@ Internally, the button is made of some bought components:
 - Some 3D printed parts to make a sort of "hockey puck" box
 - Some small screws to hold things together (eg. 4 off M2.3 x 5-8mm round head, 2 off M2.3 x 5mm countersunk)
 
-There are full instructions for how to construct the button.
+There are full [instructions](instructions.md) for how to construct the button.
 
 ## About the BLE Beacon
 
