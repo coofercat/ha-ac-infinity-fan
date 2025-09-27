@@ -12,7 +12,7 @@ The electronics for the HA AC Infinity project require a few components:
 
 There is also a whole [Bill Of Materials](ac-infinity-esphome_bom.html) (BOM) for the electronic circuit. The circuit uses mostly generic, easy to source through-hole components. It's relatively easy to solder together. The transistors I used are 2N3904, and I used a buck module (https://www.amazon.co.uk/dp/B081JMJZG6) instead of a regular 7805 voltage regulator (if you do use a 7805, you will also need a heatsink). The relay is a generic 5V coil, DPDT (I had some of these already). The BOM lists JP1 and JP2, but these are not needed - they're just holes for attaching wires.
 
-I also had PCBs made, which is optional but recommended (you get a lot of electrical noise in this circuit, so trying to make it work on a breadboard or stripboard is likely to be difficult). There is a Fritzing file and exported Gerber files available if you want to make a PCB.
+I also had PCBs made, which is optional but recommended (you get a lot of electrical noise in this circuit, so trying to make it work on a breadboard or stripboard is likely to be difficult). There is a [Fritzing file](ac-infinity-esphome.fzz) and [exported Gerber files](ha-ac-infinity-gerber-export/) available if you want to make a PCB.
 
 ## Making the Electronics
 
@@ -35,8 +35,8 @@ For the plug, cut about 30cm of the four core cable. Remove about 15mm of sleeve
 
 For the socket, you need four 50mm lengths of multi-strand wire. Strip one end to a couple of millimeters, insert into the holes on the socket and solder into place. Again, strip the other end to maybe 5mm, but don't tin them.
 
-| USB Plug Wiring | USB Socket Wiring |
-| --------------- | ----------------- |
+| USB Plug Wiring                                                                      | USB Socket Wiring                                                                        |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
 | [<img src="1-usb-plug-wiring.jpg" width="300" height="auto">](1-usb-plug-wiring.jpg) | [<img src="2-usb-socket-wiring.jpg" width="300" height="auto">](2-usb-socket-wiring.jpg) |
 
 ### Making the PCB
@@ -45,11 +45,11 @@ The PCB uses through-hole components, which are hopefully easy to fit and solder
 
 See the [Bill Of Materials](ac-infinity-esphome_bom.html) for a full list of components required and where to fit them. Note that JP1 and JP2 are not required - instead their holes can be used to connect wires from the USB sockets (see below).
 
-| Step | Step |
-| ---- | ---- |
-| [<img src="3-empty-board.jpg" width="300" height="auto">](3-empty-board.jpg) | Start with an empty board... |
+| Step                                                                                       | Step                          |
+| ------------------------------------------------------------------------------------------ | ----------------------------- |
+| [<img src="3-empty-board.jpg" width="300" height="auto">](3-empty-board.jpg)               | Start with an empty board...  |
 | [<img src="4-passive-components.jpg" width="300" height="auto">](4-passive-components.jpg) | Add the passive components... |
-| [<img src="5-active-components.jpg" width="300" height="auto">](5-active-components.jpg) | Add the active components... |
+| [<img src="5-active-components.jpg" width="300" height="auto">](5-active-components.jpg)   | Add the active components...  |
 
 ### Connecting the USB Connectors
 
