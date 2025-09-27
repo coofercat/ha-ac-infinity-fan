@@ -9,7 +9,7 @@ Whilst AC Infinity fans can connect to Wifi or Bluetooth, sadly, they do not (ye
 
 ## About This Project
 
-[<img src="electronics/7-in-a-box.jpg" width="300" height="auto" align="right">](electronics/7-in-a-box.jpg)
+[<img src="electronics/7-in-box.jpg" width="300" height="auto" align="right">](electronics/7-in-box.jpg)
 
 This project aims to provide Home Assistant integration to AC Infinity Cloudline fans, but also aims to leave all the original manufacturer functionality in place. This allows for flexibility and creativity in Home Assistant, but leaves the fans "as intended" and usable by any future owners.
 
