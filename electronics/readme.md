@@ -10,7 +10,7 @@ The electronics for the HA AC Infinity project require a few components:
 - Four M3 x 5mm and 4 M3 x 12mm screws to hold it together
 - Some short lengths of general purpose multi-strand hookup wire (ideally in a few different colours)
 
-There is also a whole [Bill Of Materials](ac-infinity-esphome_bom.html) (BOM) for the electronic circuit. The circuit uses mostly generic, easy to source through-hole components. It's relatively easy to solder together. The transistors I used are 2N3904, and I used a buck module (https://www.amazon.co.uk/dp/B081JMJZG6) instead of a regular 7805 voltage regulator (if you do use a 7805, you will also need a heatsink). The relay is a generic 5V coil, DPDT (I had some of these already). The BOM lists JP1 and JP2, but these are not needed - they're just holes for attaching wires.
+There is also a whole [Bill Of Materials](https://html-preview.github.io/?url=https://github.com/coofercat/ha-ac-infinity-fan/blob/main/electronics/ac-infinity-esphome_bom.html) (BOM) for the electronic circuit. The circuit uses mostly generic, easy to source through-hole components. It's relatively easy to solder together. The transistors I used are 2N3904, and I used a buck module (https://www.amazon.co.uk/dp/B081JMJZG6) instead of a regular 7805 voltage regulator (if you do use a 7805, you will also need a heatsink). The relay is a generic 5V coil, DPDT (I had some of these already). The BOM lists JP1 and JP2, but these are not needed - they're just holes for attaching wires.
 
 I also had PCBs made, which is optional but recommended (you get a lot of electrical noise in this circuit, so trying to make it work on a breadboard or stripboard is likely to be difficult). There is a [Fritzing file](ac-infinity-esphome.fzz) and [exported Gerber files](ha-ac-infinity-gerber-export/) available if you want to make a PCB.
 
@@ -43,7 +43,7 @@ For the socket, you need four 50mm lengths of multi-strand wire. Strip one end t
 
 The PCB uses through-hole components, which are hopefully easy to fit and solder. Most components lie against the board, although a few resistors are vertical (R7 & R8). Please note that if a 7805 voltage regulator is used (instead of a compatible module) then a heat sink will be required.
 
-See the [Bill Of Materials](ac-infinity-esphome_bom.html) for a full list of components required and where to fit them. Note that JP1 and JP2 are not required - instead their holes can be used to connect wires from the USB sockets (see below).
+See the [Bill Of Materials](https://html-preview.github.io/?url=https://github.com/coofercat/ha-ac-infinity-fan/blob/main/electronics/ac-infinity-esphome_bom.html) for a full list of components required and where to fit them. Note that JP1 and JP2 are not required - instead their holes can be used to connect wires from the USB sockets (see below).
 
 | Step                                                                                       | Step                          |
 | ------------------------------------------------------------------------------------------ | ----------------------------- |
