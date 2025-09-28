@@ -19,6 +19,15 @@ This project does not have access to the temperature or humidity (or other readi
 
 Other projects completely replace the AC Infinity controller, and so the sensor probe plugs into them instead of the controller. Those projects do have access to the environmental readings, but then become the sole source of control of the fan (which isn't what this project aimed to do).
 
+## What other projects are there?
+
+Google may be a more definitive and up to date way to find this sort of thing, but here are a few to get started:
+
+- https://github.com/dalinicus/homeassistant-acinfinity
+- https://github.com/hunterjm/ac-infinity-hacs
+- https://community.home-assistant.io/t/ac-infinity-controller-67-bluetooth-temp-humidity-fan-pwm
+- https://github.com/ex-nerd/esphome-shelly-cloudline
+
 ## What can Home Assistant do to the fan with this project?
 
 HA can read the controller's speed signal and it can read the fan's tach speed signal. Therefore it can determine what the controller has requested, and what the fan is actually doing. Further, it is able to disconnect the controller's speed request signal and insert its own instead, thus it can make the fan run at a different speed than the controller may be set to at the time.
