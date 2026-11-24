@@ -3,7 +3,7 @@
 The electronics for the HA AC Infinity project require a few components:
 
 - An ESP32-32S WROOM board (eg. https://www.amazon.co.uk/dp/B0DQ51N5B1 or https://www.aliexpress.us/item/3256806910572056.html). Ensure it's the 38-pin version.
-- A USB-C socket (eg. https://www.amazon.co.uk/dp/B0D59Y34ZF or https://www.aliexpress.us/item/3256809620386955.html)
+- A USB-C socket (eg. https://www.amazon.co.uk/dp/B0D59Y34ZF or https://www.aliexpress.us/item/3256809620386955.html). See the note about [USB breakouts](#usb-breakouts) below!
 - A male-to-male UIS cable (eg. https://www.amazon.co.uk/dp/B0BRNVBJRN or https://www.amazon.com/dp/B0DPJDC46R)
   - See [note below](#connecting-the-usb-connectors) on UIS v2 cable colors
 - Two 3D printed parts to make the box (although other boxes are also possible)
@@ -15,12 +15,20 @@ There is also a whole [Bill Of Materials](https://html-preview.github.io/?url=ht
 I also had PCBs made, which is optional but recommended (you get a lot of electrical noise in this circuit, so trying to make it work on a breadboard or stripboard is likely to be difficult). There is a [Fritzing file](ac-infinity-esphome.fzz) and [exported Gerber files](ha-ac-infinity-gerber-export/) available if you want to make a PCB.
 
 If you're starting from scratch, some initial suggestions on components - double check you select the right types on each page before ordering:
+
 - [Tantalum capacitors](https://www.aliexpress.us/item/3256805727914856.html)
 - [5V DPDT relays](https://www.aliexpress.us/item/3256804869398804.html)
 - [5V step-down buck modules](https://www.aliexpress.us/item/3256806393040704.html)
 - [Assorted transistor kit](https://www.aliexpress.us/item/3256806022216265.html)
 - [Assorted resistor kit](https://www.aliexpress.us/item/3256807801500827.html)
 - [Assorted diode kit](https://www.aliexpress.us/item/3256808445229474.html)
+
+### USB Breakouts
+
+[Nysplaidame](https://github.com/Nysplaidame) got [in touch](https://github.com/coofercat/ha-ac-infinity-fan/issues/8) to say that they'd had some problems with the USB arrangements as documented.
+
+Their solution is probably an enhancement all/most new builds should take into account. That is, that the green wire in the UIS cable should be connected to CC1 on the USB breakout board. There's currently no representation for this on the circuit board (it might be nice to have a connection for it on both sides of the board). The recommendations above for USB breakout connectors also don't include a CC1 pin, for
+an alternative, try something like this: https://www.amazon.co.uk/dp/B0F1MMCNFM
 
 ## Making the Electronics
 
@@ -79,7 +87,7 @@ See the [Bill Of Materials](https://html-preview.github.io/?url=https://github.c
 
 JP1 (left) connects to the controller. Use the cut up UIS cable's plug for this connection. If using a UIS v2 cable, the white (PWM) and yellow (tach) wires may be reversed — if the controller speed reads incorrectly, try swapping them on JP1. There's a low risk of damage if these two are incorrectly wired.
 
-JP2 (right) connects to the fan via a USB socket and a male-to-male UIS cable. Four short wires from the socket to the board is all that's needed. 
+JP2 (right) connects to the fan via a USB socket and a male-to-male UIS cable. Four short wires from the socket to the board is all that's needed.
 
 Note the colour coding of the holes on the PCB, from the top of the board to the bottom:
 
