@@ -52,6 +52,8 @@ Contrary to just about all the information elsewhere in the Internet, the AC Inf
 | Black       | GND       | Ground      |
 | Green       | CC1 & CC2 | ???         |
 
+(See the note about [USB breakouts](#usb-breakouts))
+
 The CC1/CC2 (green) connection doesn't appear to be necessary to make this project work. I'd connect it if you have connectors that have it, otherwise don't worry about it too much. It's likely only used in more complex setups, which aren't supported by this project.
 
 Since I'm now using cut-up UIS cables as part of the project, in board revision 3.1 I've changed the colour scheme on the board to match the UIS colours:
